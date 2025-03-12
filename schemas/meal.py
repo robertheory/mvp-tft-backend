@@ -1,6 +1,5 @@
 from pydantic import BaseModel
 from typing import Optional, List
-from schemas.food import FoodSchema
 
 
 class MealCreateSchema(BaseModel):

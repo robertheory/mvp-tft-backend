@@ -1,5 +1,5 @@
 from model import Session, Food
-from flask_openapi3 import Tag, Parameter
+from flask_openapi3 import Tag
 from schemas.error import ErrorSchema
 from schemas.food import FoodSchema, CreateFoodSchema, UpdateFoodSchema, DeleteFoodSchema, ListFoodSchema, GetFoodSchema
 from routes import app
