@@ -1,0 +1,35 @@
+@startuml
+
+class Meal {
+  +date: date
+}
+
+class Food {
+  +name: string
+  +unit_quantity: double
+  +calories_per_unit: double
+}
+
+class WeighIn {
+  +value: double
+  +date: date
+}
+
+class CaloricGoal {
+  +value: double
+  +start_date: date
+  +end_date: date
+}
+
+class ActivityLevel {
+  +level: string
+  +start_date: date
+  +end_date: date
+}
+
+Meal "1" -- "0..*" Food : contains
+WeighIn "0..*" --|> "WeighIn" : history
+CaloricGoal "0..*" --|> "CaloricGoal" : history
+ActivityLevel "0..*" --|> "ActivityLevel" : history
+
+@enduml
