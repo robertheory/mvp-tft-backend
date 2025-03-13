@@ -2,7 +2,6 @@ import datetime
 from sqlalchemy import Column, String, Integer, DateTime
 from sqlalchemy.orm import relationship
 from .base import Base, uuid_gen
-from .meal_food import meal_foods
 
 
 class Food(Base):
@@ -15,8 +14,7 @@ class Food(Base):
     created_at = Column(DateTime, nullable=False)
     updated_at = Column(DateTime, nullable=True)
 
-    meals = relationship('Meal', secondary=meal_foods,
-                         back_populates='foods')
+    meal_foods = relationship('MealFood', back_populates='food')
 
     def __init__(self, name, unit, calories):
         self.name = name
