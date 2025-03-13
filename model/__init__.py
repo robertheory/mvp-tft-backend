@@ -31,11 +31,13 @@ if not session.query(Food).all():
     Load data from json file if no data is present in the database
     """
 
+    print("No data found in the database: loading demo data from json file")
+
     with open('data/foods.json') as f:
         print("Loading json data")
         data = json.load(f)
 
-        print(f'Loading {len(data)} foods')
+        print(f'{len(data)} foods loaded')
 
         for food_data in data:
             food = Food(**food_data)
