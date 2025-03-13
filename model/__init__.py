@@ -1,3 +1,4 @@
+import json
 from sqlalchemy_utils import database_exists, create_database
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
@@ -6,7 +7,7 @@ import os
 from model.base import Base
 from model.food import Food
 from model.meal import Meal
-from model.meal_food import meal_foods
+from model.meal_food import MealFood
 
 db_path = "database/"
 if not os.path.exists(db_path):
@@ -22,3 +23,25 @@ if not database_exists(engine.url):
     create_database(engine.url)
 
 Base.metadata.create_all(engine)
+
+session = Session()
+
+if not session.query(Food).all():
+    """
+    Load data from json file if no data is present in the database
+    """
+
+    with open('data/foods.json') as f:
+        print("Loading json data")
+        data = json.load(f)
+
+        print(f'Loading {len(data)} foods')
+
+        for food_data in data:
+            food = Food(**food_data)
+            session.add(food)
+            session.commit()
+
+        print("Data loaded")
+
+        session.close()
