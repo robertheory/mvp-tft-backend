@@ -11,10 +11,15 @@ class MealSchema(BaseModel):
     id: str = Field(default_factory=lambda: uuid4().hex)
     title: str = Field(..., example="Lunch")
     date: datetime = Field(..., example=datetime.now().isoformat())
-
-    meal_foods: List[MealFoodSchema] = Field(
-        serialization_alias="foods")
-    # foods: List[FoodSchema] = Field(alias="foods", alias_priority=2)
+    foods: List[dict] = Field(default=[], example=[
+        {
+            "id": "f0dc437c-cddc-49fb-8d52-6d15e44ba6cc",
+            "name": "Strawberry",
+            "unit": "50g",
+            "calories": 30,
+            "quantity": 20
+        }
+    ])
 
     class Config:
         from_attributes = True
