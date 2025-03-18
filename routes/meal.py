@@ -20,8 +20,24 @@ def get_meals():
     """
     session = Session()
     meals = session.query(Meal).all()
-    meals_data = [MealSchema.model_validate(
-        meal).model_dump() for meal in meals]
+    meals_data = []
+    for meal in meals:
+        meal_dict = {
+            "id": meal.id,
+            "title": meal.title,
+            "date": meal.date,
+            "foods": [
+                {
+                    "id": meal_food.food.id,
+                    "name": meal_food.food.name,
+                    "unit": meal_food.food.unit,
+                    "calories": meal_food.food.calories,
+                    "quantity": meal_food.quantity
+                }
+                for meal_food in meal.meal_foods
+            ]
+        }
+        meals_data.append(MealSchema.model_validate(meal_dict).model_dump())
     session.close()
 
     return ListMealSchema(meals=meals_data).model_dump()
@@ -34,7 +50,23 @@ def get_meal(path: MealPath):
     session = Session()
     meal = session.query(Meal).filter(Meal.id == path.meal_id).first()
     if meal:
-        meal_data = MealSchema.model_validate(meal).model_dump()
+        # Convert meal_foods to the expected format
+        meal_dict = {
+            "id": meal.id,
+            "title": meal.title,
+            "date": meal.date,
+            "foods": [
+                {
+                    "id": meal_food.food.id,
+                    "name": meal_food.food.name,
+                    "unit": meal_food.food.unit,
+                    "calories": meal_food.food.calories,
+                    "quantity": meal_food.quantity
+                }
+                for meal_food in meal.meal_foods
+            ]
+        }
+        meal_data = MealSchema.model_validate(meal_dict).model_dump()
         session.close()
         return meal_data
     session.close()
@@ -50,7 +82,34 @@ def create_meal(body: CreateMealSchema):
     session.add(meal)
     session.commit()
     session.refresh(meal)
-    meal_data = MealSchema.model_validate(meal).model_dump()
+
+    # Process foods if provided
+    if body.foods:
+        for food_data in body.foods:
+            food = session.query(Food).filter(
+                Food.id == food_data['id']).first()
+            if food:
+                meal.add_food(food, food_data['quantity'])
+        session.commit()
+        session.refresh(meal)
+
+    # Convert to response format
+    meal_dict = {
+        "id": meal.id,
+        "title": meal.title,
+        "date": meal.date,
+        "foods": [
+            {
+                "id": meal_food.food.id,
+                "name": meal_food.food.name,
+                "unit": meal_food.food.unit,
+                "calories": meal_food.food.calories,
+                "quantity": meal_food.quantity
+            }
+            for meal_food in meal.meal_foods
+        ]
+    }
+    meal_data = MealSchema.model_validate(meal_dict).model_dump()
     session.close()
     return meal_data, 201
 
@@ -75,20 +134,50 @@ def update_meal(path: MealPath, body: UpdateMealSchema):
         request_foods = [item['id'] for item in body.foods]
         meal_foods = session.query(MealFood).filter(
             MealFood.meal_id == meal.id).all()
+
+        # Remove foods that are not in the request
         for meal_food in meal_foods:
             if meal_food.food_id not in request_foods:
                 session.delete(meal_food)
             else:
-                meal_food.quantity = [
-                    item['quantity'] for item in body.foods if item['id'] == meal_food.food_id][0]
-        for food_id in request_foods:
-            if food_id not in [meal_food.food_id for meal_food in meal_foods]:
-                meal_foods.append(MealFood(
-                    meal_id=meal.id, food_id=food_id, quantity=[item['quantity'] for item in body.foods if item['id'] == food_id][0]))
-        meal.meal_foods = meal_foods
+                # Update quantity for existing foods
+                meal_food.quantity = next(
+                    (item['quantity']
+                     for item in body.foods if item['id'] == meal_food.food_id),
+                    meal_food.quantity
+                )
 
-    session.commit()
-    meal_data = MealSchema.model_validate(meal).model_dump()
+        # Add new foods
+        existing_food_ids = {meal_food.food_id for meal_food in meal_foods}
+        for food_data in body.foods:
+            if food_data['id'] not in existing_food_ids:
+                new_meal_food = MealFood(
+                    meal_id=meal.id,
+                    food_id=food_data['id'],
+                    quantity=food_data['quantity']
+                )
+                session.add(new_meal_food)
+
+        session.commit()
+        session.refresh(meal)
+
+    # Convert to response format
+    meal_dict = {
+        "id": meal.id,
+        "title": meal.title,
+        "date": meal.date,
+        "foods": [
+            {
+                "id": meal_food.food.id,
+                "name": meal_food.food.name,
+                "unit": meal_food.food.unit,
+                "calories": meal_food.food.calories,
+                "quantity": meal_food.quantity
+            }
+            for meal_food in meal.meal_foods
+        ]
+    }
+    meal_data = MealSchema.model_validate(meal_dict).model_dump()
     session.close()
     return meal_data
 
