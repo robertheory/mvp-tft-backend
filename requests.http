@@ -1,3 +1,6 @@
+### Get all foods
+GET http://192.168.1.17:5000/foods
+
 ### Create a new meal
 POST http://192.168.1.17:5000/meals
 Content-Type: application/json
@@ -5,24 +8,7 @@ Content-Type: application/json
 {
   "title": "Lunch",
   "date": "2025-03-12T12:00:00",
-  "foods": []
-}
-
-### Get all meals
-GET http://192.168.1.17:5000/meals
-
-### Get a meal by ID
-GET http://192.168.1.17:5000/meals/39d36bdc-4e91-4576-9075-a1827fb3f847
-
-### Update a meal
-PUT http://192.168.1.17:5000/meals/39d36bdc-4e91-4576-9075-a1827fb3f847
-Content-Type: application/json
-
-{
-  "title": "Dinner 44",
-  "date": "2025-03-12T18:00:00",
-  "foods": [
-    {
+  "foods": [{
       "id": "96f339ed-2eea-4719-a68b-1bae1ad4efd1",
       "quantity": 3
     },
@@ -33,6 +19,34 @@ Content-Type: application/json
     {
       "id": "b771c7a5-2ae2-4d0a-857e-d17d96ead7e5",
       "quantity": 7
+    }]
+}
+
+### Get all meals
+GET http://192.168.1.17:5000/meals
+
+### Get a meal by ID
+GET http://192.168.1.17:5000/meals/4918f669-be3f-49b7-ac76-02e723787544
+
+### Update a meal
+PUT http://192.168.1.17:5000/meals/4918f669-be3f-49b7-ac76-02e723787544
+Content-Type: application/json
+
+{
+  "title": "Dinner 44",
+  "date": "2025-03-12T18:00:00",
+  "foods": [
+    {
+      "id": "96f339ed-2eea-4719-a68b-1bae1ad4efd1",
+      "quantity": 100
+    },
+    {
+      "id": "1c9f8f6d-690e-4a6c-a8ea-d4a3feff4dfa",
+      "quantity": 200
+    },
+    {
+      "id": "b771c7a5-2ae2-4d0a-857e-d17d96ead7e5",
+      "quantity": 300
     }
   ]
 }
