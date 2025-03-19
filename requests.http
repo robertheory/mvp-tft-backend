@@ -9,15 +9,15 @@ Content-Type: application/json
   "title": "Lunch",
   "date": "2025-03-12T12:00:00",
   "foods": [{
-      "id": "96f339ed-2eea-4719-a68b-1bae1ad4efd1",
+      "id": "33760d34-8035-4dc7-9176-1e4780a991c9",
       "quantity": 3
     },
     {
-      "id": "1c9f8f6d-690e-4a6c-a8ea-d4a3feff4dfa",
+      "id": "67a06f4a-89ca-44b4-911d-0c762caa590d",
       "quantity": 5
     },
     {
-      "id": "b771c7a5-2ae2-4d0a-857e-d17d96ead7e5",
+      "id": "add67cde-9504-4900-a18e-bcc8ce67f6bf",
       "quantity": 7
     }]
 }
