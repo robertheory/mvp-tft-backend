@@ -1,6 +1,7 @@
 from routes.meal import register_meal_routes
 from routes.caloric_goal import register_caloric_goal_routes
 from routes.weigh_in import register_weigh_in_routes
+from routes.activity_level import register_activity_level_routes
 from flask_openapi3 import OpenAPI, Info, Tag
 from flask import redirect
 from flask_cors import CORS
@@ -37,6 +38,11 @@ weigh_in_tag = Tag(
     description="Operations for managing weight measurements"
 )
 
+activity_level_tag = Tag(
+    name="Activity Level",
+    description="Operations for managing activity levels"
+)
+
 # Home route
 
 
@@ -51,3 +57,4 @@ def home():
 register_meal_routes(app)
 register_caloric_goal_routes(app)
 register_weigh_in_routes(app)
+register_activity_level_routes(app)
