@@ -1,6 +1,6 @@
 from datetime import datetime
 from uuid import uuid4
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, RootModel
 from typing import Optional, List
 from schemas.meal_food import MealFoodSchema
 
@@ -58,10 +58,10 @@ class DeleteMealSchema(BaseModel):
     id: str = Field(default_factory=lambda: uuid4().hex)
 
 
-class ListMealSchema(BaseModel):
+class ListMealSchema(RootModel):
     """ Define how a list of meals will be returned.
     """
-    meals: List[MealSchema] = Field(..., example=[])
+    root: List[MealSchema] = Field(..., example=[])
 
     class Config:
         from_attributes = True

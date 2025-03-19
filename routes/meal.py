@@ -119,7 +119,7 @@ def register_meal_routes(app):
                 return {"message": "No meals found"}, 404
 
             return ListMealSchema(
-                meals=[convert_meal_to_dict(meal) for meal in meals]
+                root=[convert_meal_to_dict(meal) for meal in meals]
             ).model_dump()
         finally:
             session.close()
