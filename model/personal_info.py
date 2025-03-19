@@ -12,14 +12,15 @@ class PersonalInfo(Base):
     gender = Column(String, nullable=False)
     height = Column(Float, nullable=False)
     weight = Column(Float, nullable=False)
-    goal = Column(String, nullable=False)
+    goal_id = Column(Integer, ForeignKey('goal.id'), nullable=False)
     activity_level_id = Column(Integer, ForeignKey(
         'activity_level.id'), nullable=False)
     date = Column(DateTime, nullable=False)
 
-    # Relationship with ActivityLevel
+    # Relationships
     activity_level = relationship("ActivityLevel", backref="personal_infos")
+    goal = relationship("Goal", backref="personal_infos")
 
     def __repr__(self):
         """String representation of the PersonalInfo model."""
-        return f"<PersonalInfo(id={self.id}, age={self.age}, gender={self.gender}, height={self.height}, weight={self.weight}, goal={self.goal}, activity_level_id={self.activity_level_id}, date={self.date})>"
+        return f"<PersonalInfo(id={self.id}, age={self.age}, gender={self.gender}, height={self.height}, weight={self.weight}, goal_id={self.goal_id}, activity_level_id={self.activity_level_id}, date={self.date})>"

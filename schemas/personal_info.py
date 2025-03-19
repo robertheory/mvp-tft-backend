@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import Optional
 from schemas.activity_level import ActivityLevelSchema
+from schemas.goal import GoalSchema
 
 
 class PersonalInfoBase(BaseModel):
@@ -10,7 +11,7 @@ class PersonalInfoBase(BaseModel):
     gender: str = Field(..., description="Gender (M/F)")
     height: float = Field(..., description="Height in meters", gt=0)
     weight: float = Field(..., description="Weight in kg", gt=0)
-    goal: str = Field(..., description="Fitness goal")
+    goal_id: int = Field(..., description="ID of the goal")
     activity_level_id: int = Field(..., description="ID of the activity level")
     date: datetime = Field(..., description="Date of the personal info")
 
@@ -24,7 +25,7 @@ class CreatePersonalInfoSchema(BaseModel):
     gender: str = Field(..., description="Gender (M/F)")
     height: float = Field(..., description="Height in meters", gt=0)
     weight: float = Field(..., description="Weight in kg", gt=0)
-    goal: str = Field(..., description="Fitness goal")
+    goal_id: int = Field(..., description="ID of the goal")
     activity_level_id: int = Field(..., description="ID of the activity level")
 
     class Config:
@@ -37,7 +38,7 @@ class CurrentPersonalInfoSchema(BaseModel):
     gender: str = Field(..., description="Gender (M/F)")
     height: float = Field(..., description="Height in meters")
     weight: float = Field(..., description="Weight in kg")
-    goal: str = Field(..., description="Fitness goal")
+    goal: GoalSchema = Field(..., description="Goal information")
     activity_level: ActivityLevelSchema = Field(
         ..., description="Activity level information")
     date: datetime = Field(..., description="Date of the personal info")
@@ -49,11 +50,6 @@ class CurrentPersonalInfoSchema(BaseModel):
 class PersonalInfoSchema(PersonalInfoBase):
     """Schema for PersonalInfo response."""
     id: int = Field(..., description="PersonalInfo ID")
+    goal: GoalSchema = Field(..., description="Goal information")
     activity_level: ActivityLevelSchema = Field(
         ..., description="Activity level information")
-
-
-class ListPersonalInfoSchema(BaseModel):
-    """Schema for list of PersonalInfo responses."""
-    personal_infos: list[PersonalInfoSchema] = Field(
-        ..., description="List of personal info records")

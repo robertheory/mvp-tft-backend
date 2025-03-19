@@ -1,0 +1,22 @@
+{
+  "1": {
+    "name": "Perder peso leve",
+    "rate": -0.1
+  },
+  "2": {
+    "name": "Perder peso moderado",
+    "rate": -0.2
+  },
+  "3": {
+    "name": "Manter peso",
+    "rate": 0.0
+  },
+  "4": {
+    "name": "Leve ganho de peso",
+    "rate": 0.1
+  },
+  "5": {
+    "name": "Ganhar peso",
+    "rate": 0.2
+  }
+}

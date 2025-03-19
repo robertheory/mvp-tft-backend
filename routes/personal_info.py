@@ -21,10 +21,11 @@ def convert_personal_info_to_dict(personal_info):
         "gender": personal_info.gender,
         "height": personal_info.height,
         "weight": personal_info.weight,
-        "goal": personal_info.goal,
+        "goal_id": personal_info.goal_id,
         "activity_level_id": personal_info.activity_level_id,
         "date": personal_info.date,
-        "activity_level": personal_info.activity_level
+        "activity_level": personal_info.activity_level,
+        "goal": personal_info.goal
     }
 
 
@@ -75,7 +76,7 @@ def register_personal_info_routes(app):
                 existing_info.gender = body.gender
                 existing_info.height = body.height
                 existing_info.weight = body.weight
-                existing_info.goal = body.goal
+                existing_info.goal_id = body.goal_id
                 existing_info.activity_level_id = body.activity_level_id
                 session.commit()
                 session.refresh(existing_info)
@@ -88,7 +89,7 @@ def register_personal_info_routes(app):
                 gender=body.gender,
                 height=body.height,
                 weight=body.weight,
-                goal=body.goal,
+                goal_id=body.goal_id,
                 activity_level_id=body.activity_level_id,
                 date=today
             )

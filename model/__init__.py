@@ -11,6 +11,7 @@ from model.meal import Meal
 from model.meal_food import MealFood
 from model.activity_level import ActivityLevel
 from model.personal_info import PersonalInfo
+from model.goal import Goal
 
 db_path = "database/"
 if not os.path.exists(db_path):
@@ -59,5 +60,20 @@ if not session.query(Food).all():
             session.add(activity_level)
         session.commit()
         print("Activity levels data loaded")
+
+    # Load goals
+    with open('data/goals.json') as f:
+        print("Loading goals data")
+        data = json.load(f)
+        print(f'{len(data)} goals loaded')
+        for goal_id, goal_data in data.items():
+            goal = Goal(
+                id=int(goal_id),
+                name=goal_data['name'],
+                rate=goal_data['rate']
+            )
+            session.add(goal)
+        session.commit()
+        print("Goals data loaded")
 
     session.close()
