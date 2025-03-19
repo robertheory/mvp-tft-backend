@@ -1,4 +1,5 @@
 from routes.meal import register_meal_routes
+from routes.personal_info import register_personal_info_routes
 from flask_openapi3 import OpenAPI, Info, Tag
 from flask import redirect
 from flask_cors import CORS
@@ -42,3 +43,4 @@ def home():
 
 # Register routes after app initialization
 register_meal_routes(app)
+register_personal_info_routes(app)
