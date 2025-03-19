@@ -7,6 +7,7 @@ import os
 from model.base import Base
 from model.food import Food
 from model.meal import Meal
+from model.caloric_goal import CaloricGoal
 from model.meal_food import MealFood
 
 db_path = "database/"
