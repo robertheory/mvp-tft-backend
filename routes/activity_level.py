@@ -5,10 +5,15 @@ from schemas.activity_level import ListActivityLevelSchema
 from schemas.error import ErrorSchema
 
 
+# Tags
+activity_level_tag = Tag(
+    name='Activity Level',
+    description='Operations for managing activity levels'
+)
+
+
 def register_activity_level_routes(app):
     """Register all activity level routes."""
-    from routes import activity_level_tag
-
     @app.get('/activity-levels', tags=[activity_level_tag], responses={"200": ListActivityLevelSchema, "404": ErrorSchema})
     def list_activity_levels():  # noqa
         """List all activity levels."""

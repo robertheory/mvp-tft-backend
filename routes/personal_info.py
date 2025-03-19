@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from flask_openapi3 import Tag
 from pydantic import BaseModel, Field
 from model import Session
@@ -9,6 +9,12 @@ from schemas.personal_info import (
     CurrentPersonalInfoSchema
 )
 from schemas.error import ErrorSchema
+
+# Tags
+personal_info_tag = Tag(
+    name='Personal Info',
+    description='Operations for managing personal information'
+)
 
 # Helper Functions
 
@@ -29,8 +35,6 @@ def convert_personal_info_to_dict(personal_info):
 
 def register_personal_info_routes(app):
     """Register all personal info routes."""
-    from routes import personal_info_tag
-
     @app.get('/personal-info/current', tags=[personal_info_tag], responses={"200": CurrentPersonalInfoSchema, "404": ErrorSchema})
     def get_current_personal_info():  # noqa
         """Get the current personal info."""

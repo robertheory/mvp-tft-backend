@@ -5,6 +5,13 @@ from schemas.food import FoodSchema, ListFoodSchema
 from schemas.error import ErrorSchema
 
 
+# Tags
+food_tag = Tag(
+    name='Food',
+    description='Operations for managing food'
+)
+
+
 def convert_food_to_dict(food):
     """Convert a food object to a dictionary."""
     return {
@@ -17,8 +24,6 @@ def convert_food_to_dict(food):
 
 def register_food_routes(app):
     """Register food routes."""
-    from routes import food_tag
-
     @app.get('/foods', tags=[food_tag], responses={"200": ListFoodSchema, "404": ErrorSchema})
     def list_foods():  # noqa
         """List all available foods."""

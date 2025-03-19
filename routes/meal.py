@@ -14,6 +14,12 @@ from schemas.meal import (
 from schemas.error import ErrorSchema
 import uuid
 
+# Tags
+meal_tag = Tag(
+    name='Meals',
+    description='Operations for managing meals'
+)
+
 # Path Parameters
 
 
@@ -48,8 +54,6 @@ def convert_meal_to_dict(meal):
 
 def register_meal_routes(app):
     """Register all meal routes."""
-    from routes import meal_tag
-
     @app.post('/meals', tags=[meal_tag], responses={"201": CreateMealSchema, "400": ErrorSchema})
     def create_meal(body: CreateMealSchema):  # noqa
         """Create a new meal."""

@@ -5,6 +5,13 @@ from schemas.goal import GoalSchema, ListGoalSchema
 from schemas.error import ErrorSchema
 
 
+# Tags
+goal_tag = Tag(
+    name='Goal',
+    description='Operations for managing goals'
+)
+
+
 def convert_goal_to_dict(goal):
     """Convert a goal object to a dictionary."""
     return {
@@ -16,8 +23,6 @@ def convert_goal_to_dict(goal):
 
 def register_goal_routes(app):
     """Register goal routes."""
-    from routes import goal_tag
-
     @app.get('/goals', tags=[goal_tag], responses={"200": ListGoalSchema, "404": ErrorSchema})
     def list_goals():  # noqa
         """List all available goals."""

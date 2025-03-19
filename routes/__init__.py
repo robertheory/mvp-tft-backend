@@ -24,36 +24,6 @@ home_tag = Tag(
     description="Documentation selection: Swagger, Redoc or ReDoc"
 )
 
-meal_tag = Tag(
-    name="Meals",
-    description="Operations for managing meals"
-)
-
-personal_info_tag = Tag(
-    name="Personal Info",
-    description="Operations for managing personal information"
-)
-
-activity_level_tag = Tag(
-    name="Activity Level",
-    description="Operations for managing activity levels"
-)
-
-goal_tag = Tag(
-    name="Goal",
-    description="Operations for managing goals"
-)
-
-weigh_in_tag = Tag(
-    name="Weigh In",
-    description="Operations for managing weigh-ins"
-)
-
-food_tag = Tag(
-    name="Food",
-    description="Operations for managing food"
-)
-
 # Home route
 
 
@@ -64,9 +34,13 @@ def home():
     return redirect('/openapi')
 
 
-# Register routes after app initialization
-register_food_routes(app)
-register_meal_routes(app)
-register_activity_level_routes(app)
-register_goal_routes(app)
-register_personal_info_routes(app)
+def register_routes(app):
+    """Register all routes."""
+    register_food_routes(app)
+    register_meal_routes(app)
+    register_goal_routes(app)
+    register_activity_level_routes(app)
+    register_personal_info_routes(app)
+
+
+register_routes(app)
