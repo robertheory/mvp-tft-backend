@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Integer, Float, Date
-from model import Base
+from model.base import Base
 
 
 class WeighIn(Base):
-    """Model for weight measurements."""
+    """WeighIn model."""
     __tablename__ = 'weigh_in'
 
     id = Column(Integer, primary_key=True)

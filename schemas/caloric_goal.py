@@ -1,29 +1,32 @@
 from pydantic import BaseModel, Field
-from datetime import date
-from typing import Optional
+from datetime import date as date_type
 
 
 class CaloricGoalBase(BaseModel):
     """Base schema for CaloricGoal."""
-    value: float = Field(..., description="Daily caloric goal value")
-    start_date: date = Field(..., description="Start date of the caloric goal")
-    end_date: Optional[date] = Field(
-        None, description="End date of the caloric goal")
-
-
-class CreateCaloricGoalSchema(BaseModel):
-    """Schema for creating a new caloric goal."""
-    value: float = Field(..., description="Daily caloric goal value")
-
-
-class CurrentCaloricGoalSchema(BaseModel):
-    """Schema for current caloric goal response."""
-    value: float = Field(..., description="Current daily caloric goal value")
-
-
-class CaloricGoalSchema(CaloricGoalBase):
-    """Schema for caloric goal responses."""
-    id: int = Field(..., description="Caloric goal ID")
+    value: float = Field(..., description="Caloric goal value")
+    date: date_type = Field(..., description="Date of the caloric goal")
 
     class Config:
         from_attributes = True
+
+
+class CreateCaloricGoalSchema(BaseModel):
+    """Schema for creating a new CaloricGoal."""
+    value: float = Field(..., description="Caloric goal value")
+
+    class Config:
+        from_attributes = True
+
+
+class CurrentCaloricGoalSchema(BaseModel):
+    """Schema for current CaloricGoal response."""
+    value: float = Field(..., description="Current caloric goal value")
+
+    class Config:
+        from_attributes = True
+
+
+class CaloricGoalSchema(CaloricGoalBase):
+    """Schema for CaloricGoal response."""
+    id: int = Field(..., description="CaloricGoal ID")

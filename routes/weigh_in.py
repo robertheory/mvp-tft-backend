@@ -31,13 +31,12 @@ def register_weigh_in_routes(app):
         """Get the current weight measurement."""
         session = Session()
         try:
-            today = date.today()
-            weigh_in = session.query(WeighIn).filter(
-                WeighIn.date == today
-            ).first()
+            # Get the most recent weight measurement
+            weigh_in = session.query(WeighIn).order_by(
+                WeighIn.date.desc()).first()
 
             if not weigh_in:
-                return {"message": "No weight measurement found for today"}, 404
+                return {"message": "No weight measurement found"}, 404
 
             return CurrentWeighInSchema(value=weigh_in.value).model_dump()
         finally:

@@ -8,8 +8,7 @@ class CaloricGoal(Base):
 
     id = Column(Integer, primary_key=True)
     value = Column(Float, nullable=False)
-    start_date = Column(Date, nullable=False)
-    end_date = Column(Date, nullable=True)
+    date = Column(Date, nullable=False)
 
     def __repr__(self):
-        return f"<CaloricGoal(value={self.value}, start_date={self.start_date}, end_date={self.end_date})>"
+        return f"<CaloricGoal(value={self.value}, date={self.date})>"

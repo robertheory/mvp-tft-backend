@@ -18,8 +18,7 @@ def convert_caloric_goal_to_dict(goal):
     return {
         "id": goal.id,
         "value": goal.value,
-        "start_date": goal.start_date,
-        "end_date": goal.end_date
+        "date": goal.date
     }
 
 
@@ -29,16 +28,15 @@ def register_caloric_goal_routes(app):
 
     @app.get('/caloric-goals/current', tags=[caloric_goal_tag], responses={"200": CurrentCaloricGoalSchema, "404": ErrorSchema})
     def get_current_goal():  # noqa
-        """Get the current active caloric goal value."""
+        """Get the current caloric goal value."""
         session = Session()
         try:
-            today = date.today()
-            goal = session.query(CaloricGoal).filter(
-                CaloricGoal.end_date >= today
-            ).first()
+            # Get the most recent caloric goal
+            goal = session.query(CaloricGoal).order_by(
+                CaloricGoal.date.desc()).first()
 
             if not goal:
-                return {"message": "No active caloric goal found"}, 404
+                return {"message": "No caloric goal found"}, 404
 
             return CurrentCaloricGoalSchema(value=goal.value).model_dump()
         finally:
@@ -51,35 +49,23 @@ def register_caloric_goal_routes(app):
         try:
             today = date.today()
 
-            # Get the current active goal
-            current_goal = session.query(CaloricGoal).filter(
-                CaloricGoal.end_date >= today
+            # Check if there's already a goal for today
+            existing_goal = session.query(CaloricGoal).filter(
+                CaloricGoal.date == today
             ).first()
 
-            if current_goal:
-                # If there's a goal for today, update it
-                if current_goal.start_date == today:
-                    current_goal.value = body.value
-                    current_goal.start_date = today
-                    current_goal.end_date = None  # Reset end_date to None
-                    session.commit()
-                    session.refresh(current_goal)
-                    goal_dict = convert_caloric_goal_to_dict(current_goal)
-                    return CaloricGoalSchema.model_validate(goal_dict).model_dump(), 201
-
-                # If there's at least 1 day difference, end the current goal
-                days_diff = (today - current_goal.start_date).days
-                if days_diff >= 1:
-                    current_goal.end_date = today
-                    session.commit()
-                else:
-                    return {"message": "Cannot end current goal. Must wait at least 1 day from start date."}, 400
+            if existing_goal:
+                # Update existing goal
+                existing_goal.value = body.value
+                session.commit()
+                session.refresh(existing_goal)
+                goal_dict = convert_caloric_goal_to_dict(existing_goal)
+                return CaloricGoalSchema.model_validate(goal_dict).model_dump(), 201
 
             # Create new goal
             new_goal = CaloricGoal(
                 value=body.value,
-                start_date=today,
-                end_date=None  # New goals start with no end date
+                date=today
             )
 
             session.add(new_goal)
