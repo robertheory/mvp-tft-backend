@@ -1,7 +1,7 @@
 from routes.meal import register_meal_routes
-from routes.personal_info import register_personal_info_routes
 from routes.activity_level import register_activity_level_routes
-from routes.goal import register_goal_routes
+from routes.personal_info import register_personal_info_routes
+from routes.food import register_food_routes
 from flask_openapi3 import OpenAPI, Info, Tag
 from flask import redirect
 from flask_cors import CORS
@@ -38,9 +38,14 @@ activity_level_tag = Tag(
     description="Operations for managing activity levels"
 )
 
-goal_tag = Tag(
-    name="Goals",
-    description="Operations for managing goals"
+weigh_in_tag = Tag(
+    name="Weigh In",
+    description="Operations for managing weigh-ins"
+)
+
+food_tag = Tag(
+    name="Food",
+    description="Operations for managing food"
 )
 
 # Home route
@@ -54,7 +59,7 @@ def home():
 
 
 # Register routes after app initialization
+register_food_routes(app)
 register_meal_routes(app)
-register_personal_info_routes(app)
 register_activity_level_routes(app)
-register_goal_routes(app)
+register_personal_info_routes(app)
