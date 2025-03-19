@@ -24,8 +24,8 @@ def convert_personal_info_to_dict(personal_info):
         "goal_id": personal_info.goal_id,
         "activity_level_id": personal_info.activity_level_id,
         "date": personal_info.date,
-        "activity_level": personal_info.activity_level,
-        "goal": personal_info.goal
+        "activity_level": personal_info.activity_level.description,
+        "goal": personal_info.goal.name
     }
 
 
@@ -50,8 +50,8 @@ def register_personal_info_routes(app):
                 gender=personal_info.gender,
                 height=personal_info.height,
                 weight=personal_info.weight,
-                goal=personal_info.goal,
-                activity_level=personal_info.activity_level,
+                goal=personal_info.goal.name,
+                activity_level=personal_info.activity_level.description,
                 date=personal_info.date
             ).model_dump()
         finally:

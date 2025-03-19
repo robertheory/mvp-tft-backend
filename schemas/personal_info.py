@@ -38,9 +38,9 @@ class CurrentPersonalInfoSchema(BaseModel):
     gender: str = Field(..., description="Gender (M/F)")
     height: float = Field(..., description="Height in meters")
     weight: float = Field(..., description="Weight in kg")
-    goal: GoalSchema = Field(..., description="Goal information")
-    activity_level: ActivityLevelSchema = Field(
-        ..., description="Activity level information")
+    goal: str = Field(..., description="Name of the goal")
+    activity_level: str = Field(...,
+                                description="Description of the activity level")
     date: datetime = Field(..., description="Date of the personal info")
 
     class Config:
@@ -50,6 +50,12 @@ class CurrentPersonalInfoSchema(BaseModel):
 class PersonalInfoSchema(PersonalInfoBase):
     """Schema for PersonalInfo response."""
     id: int = Field(..., description="PersonalInfo ID")
-    goal: GoalSchema = Field(..., description="Goal information")
-    activity_level: ActivityLevelSchema = Field(
-        ..., description="Activity level information")
+    goal: str = Field(..., description="Name of the goal")
+    activity_level: str = Field(...,
+                                description="Description of the activity level")
+
+
+class ListPersonalInfoSchema(BaseModel):
+    """Schema for list of PersonalInfo responses."""
+    personal_infos: list[PersonalInfoSchema] = Field(
+        ..., description="List of personal info records")
