@@ -3,12 +3,14 @@ from sqlalchemy_utils import database_exists, create_database
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 import os
+from sqlalchemy.ext.declarative import declarative_base
 
 from model.base import Base
 from model.food import Food
 from model.meal import Meal
 from model.caloric_goal import CaloricGoal
 from model.meal_food import MealFood
+from model.weigh_in import WeighIn
 
 db_path = "database/"
 if not os.path.exists(db_path):
