@@ -6,8 +6,8 @@ class ActivityLevelBase(BaseModel):
     name: str = Field(..., description="Name of the activity level")
     description: str = Field(...,
                              description="Description of the activity level")
-    calories_per_hour: float = Field(
-        ..., description="Calories burned per hour for this activity level")
+    multiplier: float = Field(
+        ..., description="Multiplier for this activity level")
 
     class Config:
         from_attributes = True

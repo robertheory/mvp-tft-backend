@@ -55,7 +55,7 @@ if not session.query(Food).all():
                 id=int(level_id),
                 name=level_data['name'],
                 description=level_data['description'],
-                calories_per_hour=level_data['calories_per_hour']
+                multiplier=level_data['multiplier']
             )
             session.add(activity_level)
         session.commit()

@@ -2,31 +2,31 @@
   "1": {
     "name": "Sedentário",
     "description": "Passa a maior parte do dia sentado, com pouco ou nenhum exercício",
-    "calories_per_hour": 1.2
+    "multiplier": 1.2
   },
   "2": {
     "name": "Leve",
     "description": "1 a 3h de treino na semana",
-    "calories_per_hour": 1.375
+    "multiplier": 1.375
   },
   "3": {
     "name": "Moderado",
     "description": "3 a 4h de treino na semana",
-    "calories_per_hour": 1.55
+    "multiplier": 1.55
   },
   "4": {
     "name": "Ativo",
     "description": "4 a 6h de treino na semana",
-    "calories_per_hour": 1.725
+    "multiplier": 1.725
   },
   "5": {
     "name": "Muito Ativo",
     "description": "Intenso: 7 a 9 horas por semana",
-    "calories_per_hour": 1.9
+    "multiplier": 1.9
   },
   "6": {
     "name": "Alto Nível",
     "description": "Muito intenso, 10 ou mais horas por semana",
-    "calories_per_hour": 2.2
+    "multiplier": 2.2
   }
 }
