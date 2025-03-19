@@ -3,6 +3,7 @@ from routes.activity_level import register_activity_level_routes
 from routes.personal_info import register_personal_info_routes
 from routes.food import register_food_routes
 from routes.goal import register_goal_routes
+from routes.stats import register_stats_routes
 from flask_openapi3 import OpenAPI, Info, Tag
 from flask import redirect
 from flask_cors import CORS
@@ -41,6 +42,7 @@ def register_routes(app):
     register_goal_routes(app)
     register_activity_level_routes(app)
     register_personal_info_routes(app)
+    register_stats_routes(app)
 
 
 register_routes(app)
