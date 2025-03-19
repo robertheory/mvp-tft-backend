@@ -35,7 +35,7 @@ def convert_personal_info_to_dict(personal_info):
 
 def register_personal_info_routes(app):
     """Register all personal info routes."""
-    @app.get('/personal-info/current', tags=[personal_info_tag], responses={"200": CurrentPersonalInfoSchema, "404": ErrorSchema})
+    @app.get('/personal-info', tags=[personal_info_tag], responses={"200": CurrentPersonalInfoSchema, "404": ErrorSchema})
     def get_current_personal_info():  # noqa
         """Get the current personal info."""
         session = Session()
