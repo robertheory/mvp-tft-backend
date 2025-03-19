@@ -1,11 +1,15 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, RootModel
 
 
 class GoalSchema(BaseModel):
     """Schema for Goal."""
     id: int = Field(..., description="Goal ID")
     name: str = Field(..., description="Name of the goal")
-    rate: float = Field(..., description="Rate of weight change per week")
 
     class Config:
         from_attributes = True
+
+
+class ListGoalSchema(RootModel):
+    """Schema for list of Goal responses."""
+    root: list[GoalSchema] = Field(..., description="List of goals")
