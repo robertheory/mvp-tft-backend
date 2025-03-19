@@ -1,4 +1,5 @@
 from routes.meal import register_meal_routes
+from routes.caloric_goal import register_caloric_goal_routes
 from flask_openapi3 import OpenAPI, Info, Tag
 from flask import redirect
 from flask_cors import CORS
@@ -25,6 +26,11 @@ meal_tag = Tag(
     description="Operations for managing meals"
 )
 
+caloric_goal_tag = Tag(
+    name="Caloric Goals",
+    description="Operations for managing caloric goals"
+)
+
 # Home route
 
 
@@ -37,3 +43,4 @@ def home():
 
 # Register routes after app initialization
 register_meal_routes(app)
+register_caloric_goal_routes(app)
