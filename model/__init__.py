@@ -11,6 +11,7 @@ from model.meal import Meal
 from model.caloric_goal import CaloricGoal
 from model.meal_food import MealFood
 from model.weigh_in import WeighIn
+from model.activity_level import ActivityLevel
 
 db_path = "database/"
 if not os.path.exists(db_path):
