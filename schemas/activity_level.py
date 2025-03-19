@@ -1,27 +1,13 @@
 from pydantic import BaseModel, Field
-from datetime import date as date_type
 
 
 class ActivityLevelBase(BaseModel):
     """Base schema for ActivityLevel."""
-    level: str = Field(..., description="Activity level")
-    date: date_type = Field(..., description="Date of the activity level")
-
-    class Config:
-        from_attributes = True
-
-
-class CreateActivityLevelSchema(BaseModel):
-    """Schema for creating a new ActivityLevel."""
-    level: str = Field(..., description="Activity level")
-
-    class Config:
-        from_attributes = True
-
-
-class CurrentActivityLevelSchema(BaseModel):
-    """Schema for current ActivityLevel response."""
-    level: str = Field(..., description="Current activity level")
+    name: str = Field(..., description="Name of the activity level")
+    description: str = Field(...,
+                             description="Description of the activity level")
+    calories_per_hour: float = Field(
+        ..., description="Calories burned per hour for this activity level")
 
     class Config:
         from_attributes = True

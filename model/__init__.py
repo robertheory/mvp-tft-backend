@@ -8,10 +8,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from model.base import Base
 from model.food import Food
 from model.meal import Meal
-from model.caloric_goal import CaloricGoal
 from model.meal_food import MealFood
-from model.weigh_in import WeighIn
 from model.activity_level import ActivityLevel
+from model.personal_info import PersonalInfo
 
 db_path = "database/"
 if not os.path.exists(db_path):
@@ -30,24 +29,35 @@ Base.metadata.create_all(engine)
 
 session = Session()
 
+# Load demo data if no data is present
 if not session.query(Food).all():
-    """
-    Load data from json file if no data is present in the database
-    """
-
     print("No data found in the database: loading demo data from json file")
 
+    # Load foods
     with open('data/foods.json') as f:
-        print("Loading json data")
+        print("Loading foods data")
         data = json.load(f)
-
         print(f'{len(data)} foods loaded')
-
         for food_data in data:
             food = Food(**food_data)
             session.add(food)
-            session.commit()
+        session.commit()
+        print("Foods data loaded")
 
-        print("Data loaded")
+    # Load activity levels
+    with open('data/activity_levels.json') as f:
+        print("Loading activity levels data")
+        data = json.load(f)
+        print(f'{len(data)} activity levels loaded')
+        for level_id, level_data in data.items():
+            activity_level = ActivityLevel(
+                id=int(level_id),
+                name=level_data['name'],
+                description=level_data['description'],
+                calories_per_hour=level_data['calories_per_hour']
+            )
+            session.add(activity_level)
+        session.commit()
+        print("Activity levels data loaded")
 
-        session.close()
+    session.close()
