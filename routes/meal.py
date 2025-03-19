@@ -169,14 +169,14 @@ def register_meal_routes(app):
                 for food_data in body.foods:
                     # Verify if food exists
                     food = session.query(Food).filter(
-                        Food.id == food_data.id).first()
+                        Food.id == food_data["id"]).first()
                     if not food:
-                        return {"message": f"Food with id {food_data.id} not found"}, 404
+                        return {"message": f"Food with id {food_data['id']} not found"}, 404
 
                     meal_food = MealFood(
                         meal_id=path.meal_id,
-                        food_id=food_data.id,
-                        quantity=food_data.quantity
+                        food_id=food_data["id"],
+                        quantity=food_data["quantity"]
                     )
                     session.add(meal_food)
 
