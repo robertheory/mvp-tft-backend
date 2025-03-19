@@ -120,7 +120,7 @@ def register_meal_routes(app):
             # Join with Food table to ensure we have food data
             meals = session.query(Meal).join(MealFood).join(Food).all()
             if not meals:
-                return {"message": "No meals found"}, 404
+                return []
 
             return ListMealSchema(
                 root=[convert_meal_to_dict(meal) for meal in meals]
