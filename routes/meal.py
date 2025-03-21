@@ -34,17 +34,17 @@ class MealPath(BaseModel):
 
 
 def convert_meal_to_dict(meal):
-    """Convert a meal object to a dictionary."""
+    """Convert a meal object to a dictionary with proper food formatting."""
     return {
         "id": meal.id,
         "title": meal.title,
         "date": meal.date,
         "foods": [
             {
-                "id": meal_food.food_id,
-                "name": meal_food.food.name if meal_food.food else "Unknown Food",
-                "unit": meal_food.food.unit if meal_food.food else "g",
-                "calories": meal_food.food.calories if meal_food.food else 0,
+                "id": meal_food.food.id,
+                "name": meal_food.food.name,
+                "unit": meal_food.food.unit,
+                "calories": meal_food.food.calories,
                 "quantity": meal_food.quantity
             }
             for meal_food in meal.meal_foods
@@ -88,7 +88,6 @@ def register_meal_routes(app):
 
             # Create new meal
             new_meal = Meal(
-                id=str(uuid.uuid4()),
                 title=body.title,
                 date=body.date
             )
@@ -100,8 +99,8 @@ def register_meal_routes(app):
             for food_data in body.foods:
                 meal_food = MealFood(
                     meal_id=new_meal.id,
-                    food_id=food_data.id,
-                    quantity=food_data.quantity
+                    food_id=food_data['id'],
+                    quantity=food_data['quantity']
                 )
                 session.add(meal_food)
 
