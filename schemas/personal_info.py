@@ -49,9 +49,3 @@ class CurrentPersonalInfoSchema(BaseModel):
 class PersonalInfoSchema(PersonalInfoBase):
     """Schema for PersonalInfo response."""
     id: int = Field(..., description="PersonalInfo ID")
-
-
-class ListPersonalInfoSchema(BaseModel):
-    """Schema for list of PersonalInfo responses."""
-    personal_infos: list[PersonalInfoSchema] = Field(
-        ..., description="List of personal info records")

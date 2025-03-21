@@ -69,7 +69,6 @@ def register_meal_routes(app):
 
             # Add food relationships
             for food_data in body.foods:
-                # Verify if food exists
                 food = session.query(Food).filter(
                     Food.id == food_data["id"]).first()
                 if not food:
@@ -77,7 +76,6 @@ def register_meal_routes(app):
 
                 meal_food = MealFood(
                     meal_id=new_meal.id,
-                    # Accessing food_data["id"] instead of food_data.id
                     food_id=food_data["id"],
                     quantity=food_data["quantity"]
                 )
@@ -131,13 +129,11 @@ def register_meal_routes(app):
             if not meal:
                 return {"message": "Meal not found"}, 404
 
-            # Update meal basic info
             if body.title is not None:
                 meal.title = body.title
             if body.date is not None:
                 meal.date = body.date
 
-            # Update food relationships if provided
             if body.foods is not None:
                 # Remove existing food relationships
                 session.query(MealFood).filter(
@@ -145,7 +141,6 @@ def register_meal_routes(app):
 
                 # Add new food relationships
                 for food_data in body.foods:
-                    # Verify if food exists
                     food = session.query(Food).filter(
                         Food.id == food_data["id"]).first()
                     if not food:
@@ -177,7 +172,6 @@ def register_meal_routes(app):
             # Delete meal food relationships first
             session.query(MealFood).filter(
                 MealFood.meal_id == path.meal_id).delete()
-            # Delete meal
             session.delete(meal)
             session.commit()
             return "", 204
