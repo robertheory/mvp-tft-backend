@@ -59,48 +59,27 @@ def register_meal_routes(app):
         """Create a new meal."""
         session = Session()
         try:
-            # Check if there's already a meal for today
-            today = datetime.now()
-            existing_meal = session.query(Meal).filter(
-                Meal.date >= today.replace(
-                    hour=0, minute=0, second=0, microsecond=0)
-            ).first()
-
-            if existing_meal:
-                # Update existing meal
-                existing_meal.title = body.title
-                existing_meal.date = body.date
-                # Remove existing food relationships
-                session.query(MealFood).filter(
-                    MealFood.meal_id == existing_meal.id).delete()
-                # Add new food relationships
-                for food_data in body.foods:
-                    meal_food = MealFood(
-                        meal_id=existing_meal.id,
-                        food_id=food_data.id,
-                        quantity=food_data.quantity
-                    )
-                    session.add(meal_food)
-                session.commit()
-                session.refresh(existing_meal)
-                meal_dict = convert_meal_to_dict(existing_meal)
-                return MealSchema.model_validate(meal_dict).model_dump(), 201
-
             # Create new meal
             new_meal = Meal(
                 title=body.title,
                 date=body.date
             )
-
             session.add(new_meal)
             session.commit()
 
             # Add food relationships
             for food_data in body.foods:
+                # Verify if food exists
+                food = session.query(Food).filter(
+                    Food.id == food_data["id"]).first()
+                if not food:
+                    return {"message": f"Food with id {food_data['id']} not found"}, 404
+
                 meal_food = MealFood(
                     meal_id=new_meal.id,
-                    food_id=food_data['id'],
-                    quantity=food_data['quantity']
+                    # Accessing food_data["id"] instead of food_data.id
+                    food_id=food_data["id"],
+                    quantity=food_data["quantity"]
                 )
                 session.add(meal_food)
 
