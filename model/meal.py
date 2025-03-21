@@ -20,6 +20,7 @@ class Meal(Base):
     foods = relationship('Food', secondary='meal_foods', viewonly=True)
 
     def __init__(self, title, date):
+        self.id = uuid_gen()
         self.title = title
         self.date = date
         self.created_at = datetime.datetime.now()

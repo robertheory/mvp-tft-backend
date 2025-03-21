@@ -17,6 +17,7 @@ class Food(Base):
     meal_foods = relationship('MealFood', back_populates='food')
 
     def __init__(self, name, unit, calories):
+        self.id = uuid_gen()
         self.name = name
         self.unit = unit
         self.calories = calories
