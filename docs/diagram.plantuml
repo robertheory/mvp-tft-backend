@@ -1,35 +1,60 @@
-@startuml
+@startuml total-fitness-tracker
 
 class Meal {
-  +date: date
+  +id: string
+  +title: string
+  +date: datetime
+  +created_at: datetime
+  +updated_at: datetime
 }
 
 class Food {
+  +id: string
   +name: string
-  +unit_quantity: double
-  +calories_per_unit: double
+  +unit: string
+  +calories: integer
+  +created_at: datetime
+  +updated_at: datetime
 }
 
-class WeighIn {
-  +value: double
-  +date: date
+class MealFood {
+  +meal_id: string
+  +food_id: string
+  +quantity: integer
 }
 
-class CaloricGoal {
-  +value: double
-  +start_date: date
-  +end_date: date
+class PersonalInfo {
+  +id: string
+  +gender: string
+  +weight: float
+  +height: float
+  +age: integer
+  +date: datetime
+  +activity_level_id: string
+  +goal_id: string
+  +created_at: datetime
+  +updated_at: datetime
 }
 
 class ActivityLevel {
-  +level: string
-  +start_date: date
-  +end_date: date
+  +id: string
+  +name: string
+  +multiplier: float
+  +created_at: datetime
+  +updated_at: datetime
 }
 
-Meal "1" -- "0..*" Food : contains
-WeighIn "0..*" --|> "WeighIn" : history
-CaloricGoal "0..*" --|> "CaloricGoal" : history
-ActivityLevel "0..*" --|> "ActivityLevel" : history
+class Goal {
+  +id: string
+  +name: string
+  +rate: float
+  +created_at: datetime
+  +updated_at: datetime
+}
+
+Meal "1" -- "0..*" MealFood : contains
+Food "1" -- "0..*" MealFood : referenced by
+PersonalInfo "1" -- "1" ActivityLevel : has
+PersonalInfo "1" -- "1" Goal : has
 
 @enduml
