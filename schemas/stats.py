@@ -8,9 +8,13 @@ class DailyCalories(BaseModel):
     value: float  # Total calories for the day
 
 
-class StatsSchema(BaseModel):
+class RatesSchema(BaseModel):
     """Schema for user statistics."""
     bmr: float = 0.0  # Basal Metabolic Rate in kcal/day
     tdee: float = 0.0  # Total Daily Energy Expenditure in kcal/day
-    # List of daily calories for the last 7 days
-    history: List[DailyCalories] = []
+
+
+class HistorySchema(BaseModel):
+    """Schema for user's caloric history."""
+    history: List[DailyCalories] = [
+    ]  # List of daily calories for the last 7 days

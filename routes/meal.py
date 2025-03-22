@@ -1,4 +1,3 @@
-from datetime import datetime
 from flask_openapi3 import Tag
 from pydantic import BaseModel, Field
 from model import Session
@@ -12,7 +11,6 @@ from schemas.meal import (
     UpdateMealSchema
 )
 from schemas.error import ErrorSchema
-import uuid
 
 # Tags
 meal_tag = Tag(
@@ -38,7 +36,7 @@ def convert_meal_to_dict(meal):
     return {
         "id": meal.id,
         "title": meal.title,
-        "date": meal.date,
+        "date": meal.date.replace(microsecond=0).isoformat(),
         "foods": [
             {
                 "id": meal_food.food.id,

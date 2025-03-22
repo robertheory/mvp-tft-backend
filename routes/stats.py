@@ -6,7 +6,7 @@ from model.goal import Goal
 from model.meal import Meal
 from model.meal_food import MealFood
 from model.food import Food
-from schemas.stats import StatsSchema, DailyCalories
+from schemas.stats import RatesSchema, HistorySchema, DailyCalories
 from schemas.error import ErrorSchema
 from datetime import datetime, timedelta
 from sqlalchemy import func
@@ -64,71 +64,98 @@ def calculate_tdee(bmr: float, multiplier: float, goal_rate: float) -> float:
     return tdee
 
 
+def get_user_rates(session):
+    """Get user's BMR and TDEE statistics."""
+    # Get the most recent personal info
+    personal_info = session.query(PersonalInfo).order_by(
+        PersonalInfo.date.desc()
+    ).first()
+
+    if not personal_info:
+        return None, "No personal info found"
+
+    # Get activity level and goal
+    activity_level = session.query(ActivityLevel).filter(
+        ActivityLevel.id == personal_info.activity_level_id
+    ).first()
+
+    goal = session.query(Goal).filter(
+        Goal.id == personal_info.goal_id
+    ).first()
+
+    if not activity_level or not goal:
+        return None, "Activity level or goal not found"
+
+    # Calculate BMR
+    bmr = calculate_bmr(
+        gender=personal_info.gender,
+        weight=personal_info.weight,
+        height=personal_info.height,
+        age=personal_info.age
+    )
+
+    # Calculate TDEE
+    tdee = calculate_tdee(
+        bmr=bmr,
+        multiplier=activity_level.multiplier,
+        goal_rate=goal.rate
+    )
+
+    return RatesSchema(
+        bmr=round(bmr, 2),
+        tdee=round(tdee, 2)
+    ), None
+
+
+def get_user_history(session):
+    """Get user's caloric history for the last 7 days."""
+    # Get last 7 days of meals
+    end_date = datetime.now()
+    # Set end_date to midnight of tomorrow to include all of today's meals
+    end_date = end_date.replace(
+        hour=23, minute=59, second=59, microsecond=999999)
+    # Set start_date to midnight of 6 days ago
+    start_date = (end_date - timedelta(days=6)
+                  ).replace(hour=0, minute=0, second=0, microsecond=0)
+
+    history = []
+
+    meals = session.query(Meal).join(MealFood).join(Food).filter(
+        Meal.date >= start_date, Meal.date <= end_date).all()
+
+    for meal in meals:
+        meal_calories = 0
+        for meal_food in meal.meal_foods:
+            meal_calories += meal_food.food.calories * meal_food.quantity
+
+        history.append(DailyCalories(
+            weekday=meal.date.weekday(),
+            value=meal_calories
+        ))
+
+    return HistorySchema(history=history)
+
+
 def register_stats_routes(app):
     """Register stats routes."""
-    @app.get('/stats', tags=[stats_tag], responses={"200": StatsSchema, "404": ErrorSchema})
-    def get_stats():  # noqa
-        """Get user statistics including BMR and TDEE."""
+    @app.get('/stats/rates', tags=[stats_tag], responses={"200": RatesSchema, "404": ErrorSchema})
+    def get_rates():  # noqa
+        """Get user's BMR and TDEE rates."""
         session = Session()
         try:
-            # Get the most recent personal info
-            personal_info = session.query(PersonalInfo).order_by(
-                PersonalInfo.date.desc()
-            ).first()
+            rates, error = get_user_rates(session)
+            if error:
+                return {"message": error}, 404
+            return rates.model_dump()
+        finally:
+            session.close()
 
-            if not personal_info:
-                return {"message": "No personal info found"}, 404
-
-            # Get activity level and goal
-            activity_level = session.query(ActivityLevel).filter(
-                ActivityLevel.id == personal_info.activity_level_id
-            ).first()
-
-            goal = session.query(Goal).filter(
-                Goal.id == personal_info.goal_id
-            ).first()
-
-            if not activity_level or not goal:
-                return {"message": "Activity level or goal not found"}, 404
-
-            # Calculate BMR
-            bmr = calculate_bmr(
-                gender=personal_info.gender,
-                weight=personal_info.weight,
-                height=personal_info.height,
-                age=personal_info.age
-            )
-
-            # Calculate TDEE
-            tdee = calculate_tdee(
-                bmr=bmr,
-                multiplier=activity_level.multiplier,
-                goal_rate=goal.rate
-            )
-
-            # Get last 7 days of meals
-            end_date = datetime.now()
-            start_date = end_date - timedelta(days=6)
-
-            history = []
-
-            meals = session.query(Meal).join(MealFood).join(Food).filter(
-                Meal.date >= start_date, Meal.date <= end_date).all()
-
-            for meal in meals:
-                meal_calories = 0
-                for meal_food in meal.meal_foods:
-                    meal_calories += meal_food.food.calories * meal_food.quantity
-
-                history.append(DailyCalories(
-                    weekday=meal.date.weekday(),
-                    value=meal_calories
-                ))
-
-            return StatsSchema(
-                bmr=round(bmr, 2),
-                tdee=round(tdee, 2),
-                history=history
-            ).model_dump()
+    @app.get('/stats/history', tags=[stats_tag], responses={"200": HistorySchema})
+    def get_history():  # noqa
+        """Get user's caloric history for the last 7 days."""
+        session = Session()
+        try:
+            history = get_user_history(session)
+            return history.model_dump()
         finally:
             session.close()
