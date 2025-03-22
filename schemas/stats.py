@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, RootModel
 from typing import List
 
 
@@ -14,7 +14,6 @@ class RatesSchema(BaseModel):
     tdee: float = 0.0  # Total Daily Energy Expenditure in kcal/day
 
 
-class HistorySchema(BaseModel):
+class HistorySchema(RootModel):
     """Schema for user's caloric history."""
-    history: List[DailyCalories] = [
-    ]  # List of daily calories for the last 7 days
+    root: List[DailyCalories] = []

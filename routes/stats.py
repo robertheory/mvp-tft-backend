@@ -133,7 +133,7 @@ def get_user_history(session):
             value=meal_calories
         ))
 
-    return HistorySchema(history=history)
+    return HistorySchema(root=history)
 
 
 def register_stats_routes(app):
