@@ -129,7 +129,7 @@ def get_user_history(session):
             meal_calories += meal_food.food.calories * meal_food.quantity
 
         history.append(DailyCalories(
-            date=meal.date.strftime("%m/%d"),
+            date=meal.date.strftime("%Y-%m-%d"),
             value=meal_calories
         ))
 
