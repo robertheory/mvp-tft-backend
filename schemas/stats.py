@@ -4,7 +4,7 @@ from typing import List
 
 class DailyCalories(BaseModel):
     """Schema for daily caloric consumption."""
-    weekday: int  # Day of the week (0-6)
+    date: str  # Date in format MM/DD
     value: float  # Total calories for the day
 
 
