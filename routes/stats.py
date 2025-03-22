@@ -3,8 +3,13 @@ from model import Session
 from model.personal_info import PersonalInfo
 from model.activity_level import ActivityLevel
 from model.goal import Goal
-from schemas.stats import StatsSchema
+from model.meal import Meal
+from model.meal_food import MealFood
+from model.food import Food
+from schemas.stats import StatsSchema, DailyCalories
 from schemas.error import ErrorSchema
+from datetime import datetime, timedelta
+from sqlalchemy import func
 
 
 # Tags
@@ -101,9 +106,29 @@ def register_stats_routes(app):
                 goal_rate=goal.rate
             )
 
+            # Get last 7 days of meals
+            end_date = datetime.now()
+            start_date = end_date - timedelta(days=6)
+
+            history = []
+
+            meals = session.query(Meal).join(MealFood).join(Food).filter(
+                Meal.date >= start_date, Meal.date <= end_date).all()
+
+            for meal in meals:
+                meal_calories = 0
+                for meal_food in meal.meal_foods:
+                    meal_calories += meal_food.food.calories * meal_food.quantity
+
+                history.append(DailyCalories(
+                    weekday=meal.date.weekday(),
+                    value=meal_calories
+                ))
+
             return StatsSchema(
                 bmr=round(bmr, 2),
-                tdee=round(tdee, 2)
+                tdee=round(tdee, 2),
+                history=history
             ).model_dump()
         finally:
             session.close()
