@@ -21,15 +21,15 @@ Clone o repositório:
 
 ```bash
 git clone https://github.com/robertheory/backend-tft.git
-cd tft-mvp
+cd backend-tft
 ```
 
 Crie e ative um ambiente virtual (opcional, mas recomendado):
 
 ```bash
-python -m venv env
-source env/bin/activate # Linux/macOS
-env\Scripts\activate # Windows
+python -m venv venv
+source venv/bin/activate # Linux/macOS
+venv\Scripts\activate # Windows
 ```
 
 Instale as dependências:
