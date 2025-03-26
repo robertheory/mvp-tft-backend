@@ -72,7 +72,7 @@ def get_user_rates(session):
     ).first()
 
     if not personal_info:
-        return None, "No personal info found"
+        return RatesSchema(bmr=0.0, tdee=0.0), None
 
     # Get activity level and goal
     activity_level = session.query(ActivityLevel).filter(
@@ -84,7 +84,7 @@ def get_user_rates(session):
     ).first()
 
     if not activity_level or not goal:
-        return None, "Activity level or goal not found"
+        return RatesSchema(bmr=0.0, tdee=0.0), None
 
     # Calculate BMR
     bmr = calculate_bmr(
