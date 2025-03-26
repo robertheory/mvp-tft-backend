@@ -111,27 +111,33 @@ def get_user_history(session):
     """Get user's caloric history for the last 7 days."""
     # Get last 7 days of meals
     end_date = datetime.now()
+
     # Set end_date to midnight of tomorrow to include all of today's meals
     end_date = end_date.replace(
         hour=23, minute=59, second=59, microsecond=999999)
+
     # Set start_date to midnight of 6 days ago
     start_date = (end_date - timedelta(days=6)
                   ).replace(hour=0, minute=0, second=0, microsecond=0)
 
-    history = []
+    # Query to get daily calories sum
+    daily_calories = session.query(
+        func.date(Meal.date).label('date'),
+        func.sum(MealFood.quantity * Food.calories).label('total_calories')
+    ).join(MealFood).join(Food).filter(
+        Meal.date >= start_date,
+        Meal.date <= end_date
+    ).group_by(
+        func.date(Meal.date)
+    ).all()
 
-    meals = session.query(Meal).join(MealFood).join(Food).filter(
-        Meal.date >= start_date, Meal.date <= end_date).all()
-
-    for meal in meals:
-        meal_calories = 0
-        for meal_food in meal.meal_foods:
-            meal_calories += meal_food.food.calories * meal_food.quantity
-
-        history.append(DailyCalories(
-            date=meal.date.strftime("%Y-%m-%d"),
-            value=meal_calories
-        ))
+    history = [
+        DailyCalories(
+            date=date,
+            value=float(total_calories)
+        )
+        for date, total_calories in daily_calories
+    ]
 
     return HistorySchema(root=history)
 
